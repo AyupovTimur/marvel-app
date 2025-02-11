@@ -1,32 +1,20 @@
 import "./charList.scss";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import MarvelServices from "../../services/MarvelServices";
+import { useState, useEffect, useRef } from "react";
 import Spinner from "../spinner/Spinner";
 import Error from "../error/Error";
+import useMarvelServices from "../../services/useMarvelServices";
 
 const CharList = (props) => {
   const [chars, setChars] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [newCharsLoading, setNewCharsLoading] = useState(false);
   const [offset, setOffset] = useState(10);
   const [charEnded, setCharEnded] = useState(false);
 
-  const charCollection = useMemo(() => new MarvelServices(), []);
+  const { loading, error, getAllCharacters } = useMarvelServices();
 
-  const getChars = useCallback(
-    (offset) => {
-      charsLoading();
-      charCollection
-        .getAllCharacters(offset)
-        .then(setCharsLoaded)
-        .catch(onError);
-    },
-    [charCollection]
-  );
-
-  const charsLoading = () => {
-    setNewCharsLoading(true);
+  const getChars = (offset, initial) => {
+    initial ? setNewCharsLoading(false) : setNewCharsLoading(true);
+    getAllCharacters(offset).then(setCharsLoaded);
   };
 
   const setCharsLoaded = (newChars) => {
@@ -35,15 +23,9 @@ const CharList = (props) => {
       ended = true;
     }
     setChars((chars) => [...chars, ...newChars]);
-    setLoading(false);
     setNewCharsLoading(false);
     setOffset((offset) => offset + 9);
     setCharEnded(ended);
-  };
-
-  const onError = () => {
-    setLoading(false);
-    setError(true);
   };
 
   const itemRefs = useRef([]);
@@ -57,8 +39,8 @@ const CharList = (props) => {
   };
 
   useEffect(() => {
-    getChars();
-  }, [getChars]);
+    getChars(offset, true);
+  }, []);
 
   function returnCharsList(chars) {
     let imgStyle = { objectFit: "cover" };
@@ -88,16 +70,15 @@ const CharList = (props) => {
 
   const items = returnCharsList(chars);
 
-  const loadingSpinner = loading ? <Spinner /> : null;
+  const loadingSpinner = loading && !newCharsLoading ? <Spinner /> : null;
   const errorComponent = error ? <Error /> : null;
-  const content = !(loadingSpinner || errorComponent) ? items : null;
 
   return (
     <div className="char__list">
+      {items}
       <div className="user__notification">
         {loadingSpinner}
         {errorComponent}
-        {content}
       </div>
       <button
         style={{ display: charEnded ? "none" : "block" }}
