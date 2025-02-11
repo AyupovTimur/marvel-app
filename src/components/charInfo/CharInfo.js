@@ -1,40 +1,28 @@
 import "./charInfo.scss";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import MarvelServices from "../../services/MarvelServices";
+import { useEffect, useState } from "react";
 import Spinner from "../spinner/Spinner";
 import Error from "../error/Error";
 import Skeleton from "../skeleton/Skeleton";
+import useMarvelServices from "../../services/useMarvelServices";
 
 const CharInfo = (props) => {
   const [char, setChar] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
-  const getCharById = useMemo(() => new MarvelServices(), []);
+  const { loading, error, getOneCharacter, clearError } = useMarvelServices();
 
-  const getChar = useCallback(() => {
+  const getChar = () => {
     const { id } = props;
     if (!id) return;
-    onCharLoading();
-    getCharById.getOneCharacter(id).then(setCharLoaded).catch(onError);
-  }, [getCharById, props]);
+    clearError();
+    getOneCharacter(id).then(setCharLoaded);
+  };
 
   useEffect(() => {
     getChar();
-  }, [getChar]);
+  }, [props.id]);
 
   const setCharLoaded = (char) => {
     setChar(char);
-    setLoading(false);
-  };
-
-  const onError = () => {
-    setError(true);
-    setLoading(false);
-  };
-
-  const onCharLoading = () => {
-    setLoading(true);
   };
 
   const charLoadind = loading ? <Spinner /> : null;
