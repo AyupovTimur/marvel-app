@@ -3,10 +3,11 @@ import useMarvelServices from "../../services/useMarvelServices";
 import { useEffect, useState } from "react";
 import Error from "../error/Error";
 import Spinner from "../spinner/Spinner";
+import { Link } from "react-router";
 
 const ComicsList = () => {
   const [comics, setComics] = useState([]);
-  const [offset, setOffset] = useState(15);
+  const [offset, setOffset] = useState(1);
   const [newComicsLoading, setNewComicsLoading] = useState(false);
   const [comicsEnded, setComicsEnded] = useState(false);
 
@@ -61,7 +62,7 @@ const view = (comics) => {
       {comics.map((comicBook) => {
         return (
           <li key={comicBook.id} className="comics__item">
-            <a href={comicBook.resourceURI}>
+            <Link to={`/comics/` + comicBook.id}>
               <img
                 src={comicBook.img}
                 alt="ultimate war"
@@ -70,10 +71,10 @@ const view = (comics) => {
               <div className="comics__item-name">{comicBook.title}</div>
               <div className="comics__item-price">
                 {comicBook.price === 0
-                  ? "Unspecified price"
+                  ? "Price not specified"
                   : comicBook.price + "$"}
               </div>
-            </a>
+            </Link>
           </li>
         );
       })}

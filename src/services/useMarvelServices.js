@@ -28,6 +28,13 @@ const useMarvelServices = () => {
     return comics.data.results.map(_transformComicsData);
   };
 
+  const getOneComicBook = async (id = "114534") => {
+    const comicBook = await request(
+      `https://gateway.marvel.com:443/v1/public/comics/${id}?` + _apikey
+    );
+    return _transformComicsData(comicBook.data.results[0]);
+  };
+
   const _transformData = (item) => {
     return {
       id: item.id,
@@ -64,6 +71,7 @@ const useMarvelServices = () => {
     getOneCharacter,
     clearError,
     getAllComics,
+    getOneComicBook,
   };
 };
 
