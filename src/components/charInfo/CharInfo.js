@@ -32,8 +32,10 @@ const CharInfo = (props) => {
 
   return (
     <div className="char__info">
-      {charLoadind}
-      {charError}
+      <div className="user__notification">
+        {charLoadind}
+        {charError}
+      </div>
       {skeleton}
       {content}
     </div>
