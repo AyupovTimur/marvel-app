@@ -20,6 +20,14 @@ const useMarvelServices = () => {
     return _transformData(item.data.results[0]);
   };
 
+  const getAllComics = async (offset = "1") => {
+    const comics = await request(
+      `https://gateway.marvel.com:443/v1/public/comics?limit=8&offset=${offset}&` +
+        _apikey
+    );
+    return comics.data.results.map(_transformComicsData);
+  };
+
   const _transformData = (item) => {
     return {
       id: item.id,
@@ -35,7 +43,28 @@ const useMarvelServices = () => {
     };
   };
 
-  return { loading, error, getAllCharacters, getOneCharacter, clearError };
+  const _transformComicsData = (comics) => {
+    return {
+      id: comics.id,
+      title: comics.title,
+      description: comics.description,
+      pageCount: comics.pageCount,
+      resourceURI: comics.resourceURI,
+      textObjects: comics.textObjects[0]?.text,
+      language: comics.textObjects[0]?.language,
+      price: comics.prices[0].price,
+      img: comics.thumbnail.path + "." + comics.thumbnail.extension,
+    };
+  };
+
+  return {
+    loading,
+    error,
+    getAllCharacters,
+    getOneCharacter,
+    clearError,
+    getAllComics,
+  };
 };
 
 export default useMarvelServices;
