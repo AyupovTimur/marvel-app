@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
-import { MainPage, ComicsPage, SingleComicPage } from "../../pages/index";
 import { Route, Routes } from "react-router";
 import AppHeader from "../appHeader/AppHeader";
-import PageNotFound from "../../pages/PageNotFound";
+import { lazy } from "react";
+
+const MainPage = lazy(() => import("../../pages/MainPage"));
+const ComicsPage = lazy(() => import("../../pages/ComicsPage"));
+const SingleComicPage = lazy(() => import("../../pages/SingleComicPage"));
+const PageNotFound = lazy(() => import("../../pages/PageNotFound"));
 
 const App = () => {
   return (

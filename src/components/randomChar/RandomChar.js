@@ -50,6 +50,15 @@ const RandomChar = () => {
   );
 };
 
+const modifyDescription = (description) => {
+  if (description === undefined || description.length === 0) {
+    return "Description not found";
+  }
+  return description.length > 200
+    ? description.slice(0, 200) + "..."
+    : description;
+};
+
 const View = ({ char }) => {
   const { name, description, img, homepage, wiki } = char;
   let imgStyle = { objectFit: "cover" };
@@ -69,11 +78,7 @@ const View = ({ char }) => {
       />
       <div className="randomchar__info">
         <p className="randomchar__name">{name}</p>
-        <p className="randomchar__descr">
-          {description === undefined || description.length === 0
-            ? "Description not found"
-            : description}
-        </p>
+        <p className="randomchar__descr">{modifyDescription(description)}</p>
         <div className="randomchar__btns">
           <a href={homepage} className="button button__main">
             <div className="inner">Homepage</div>
