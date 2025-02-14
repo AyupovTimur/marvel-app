@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import Error from "../components/error/Error";
 import Spinner from "../components/spinner/Spinner";
+import { Helmet } from "react-helmet";
 
 const SingleComicPage = () => {
   const [comicBook, setComicBook] = useState({});
-
   const { error, loading, getOneComicBook, clearError } = useMarvelServices();
   const { comicId } = useParams();
 
@@ -30,6 +30,13 @@ const SingleComicPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>A page with one Marvel comic book</title>
+        <meta
+          name="description"
+          content="The page contains information about Marvel Comics"
+        />
+      </Helmet>
       <div className="single-comic">{content}</div>
       <div className="user__notification">
         {comicError}

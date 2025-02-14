@@ -20,6 +20,14 @@ const useMarvelServices = () => {
     return _transformData(item.data.results[0]);
   };
 
+  const getOneCharacterByName = async (name = "thor") => {
+    const oneCharacter = await request(
+      `https://gateway.marvel.com:443/v1/public/characters?name=${name}&` +
+        _apikey
+    );
+    return _transformData(oneCharacter.data.results[0]);
+  };
+
   const getAllComics = async (offset = "1") => {
     const comics = await request(
       `https://gateway.marvel.com:443/v1/public/comics?limit=8&offset=${offset}&` +
@@ -39,10 +47,7 @@ const useMarvelServices = () => {
     return {
       id: item.id,
       name: item.name,
-      description:
-        item.description.length > 200
-          ? item.description.slice(0, 200) + "..."
-          : item.description,
+      description: item.description,
       img: item.thumbnail.path + "." + item.thumbnail.extension,
       homepage: item.urls[0].url,
       wiki: item.urls[1].url,
@@ -72,6 +77,7 @@ const useMarvelServices = () => {
     clearError,
     getAllComics,
     getOneComicBook,
+    getOneCharacterByName,
   };
 };
 
